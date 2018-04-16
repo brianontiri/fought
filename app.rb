@@ -20,7 +20,7 @@ require("bundler/setup")
 
   #loads first web page 'index'
   get("/") do
-    erb(:start)
+    erb(:index)
   end
 
   get("/index") do

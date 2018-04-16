@@ -7,15 +7,20 @@ require("bundler/setup")
   enable :sessions
 
   #sessions
-  # post "/current_users" do
-  #   @name = params["name"]
-  #   @email = params["email"]
-   
+  post "/current_users" do
+    @name = params["name"]
+    @email = params["email"]
+    if Authentication.exists?(authentications: {username: @name, Email: @email})
+      session[:message] = "Welcome #{@name}"
+      redirect "/index?name=#{@name}"
+    else
+      erb(:no_user)
+    end
   end
 
   #loads first web page 'index'
   get("/") do
-    erb(:index)
+    erb(:start)
   end
 
   get("/index") do
@@ -23,16 +28,16 @@ require("bundler/setup")
     erb(:index)
   end
 
-  # get("/login") do
-  #   erb(:login)
-  # end
+  get("/login") do
+    erb(:login)
+  end
 
-  # get("/logout") do
-  #   @message = session.delete(:message)
-  #   @name = params["name"]
-  #   @email = params["email"]
-  #   redirect("/")
-  # end
+  get("/logout") do
+    @message = session.delete(:message)
+    @name = params["name"]
+    @email = params["email"]
+    redirect("/")
+  end
 
   get("/event") do
     @hosts = Host.all()
@@ -40,10 +45,10 @@ require("bundler/setup")
   	erb(:events)
   end
 
-  # get("/user") do
-  #   @users = User.all()
-  #   erb(:users)
-  # end
+  get("/user") do
+    @users = User.all()
+    erb(:users)
+  end
   
 
   get("/host") do
@@ -66,20 +71,20 @@ require("bundler/setup")
     erb(:hosts)
   end
 
-  # get("/users") do
-  #   @users = User.all()
-  #   erb(:users)
-  # end
+  get("/users") do
+    @users = User.all()
+    erb(:users)
+  end
 
-  # get("/current_users") do
-  #   erb(:current_users)
-  # end
+  get("/current_users") do
+    erb(:current_users)
+  end
 
-  # get('/users/:id') do
-  #   @events = Event.all()
-  #   @user = User.find(params.fetch("id").to_i())
-  #   erb(:user_details)
-  # end
+  get('/users/:id') do
+    @events = Event.all()
+    @user = User.find(params.fetch("id").to_i())
+    erb(:user_details)
+  end
 
   get('/hosts/:id') do
     @events = Event.all()
@@ -93,19 +98,19 @@ require("bundler/setup")
     erb(:events_details)
   end
 
-  # post("/sign_ups") do
-  #   username = params.fetch(:username)
-  #   Email = params.fetch(:Email)
-  #   auth = Authentication.new({:username => username,:Email => Email,:id => nil})
-  #   if Authentication.exists?(username: auth.username)
-  #     erb(:errors)
-  #   elsif Authentication.exists?(Email: auth.Email)
-  #     erb(:errors)
-  #   else
-  #     auth.save()
-  #     redirect("/current_users")
-  #   end
-  # end
+  post("/sign_ups") do
+    username = params.fetch(:username)
+    Email = params.fetch(:Email)
+    auth = Authentication.new({:username => username,:Email => Email,:id => nil})
+    if Authentication.exists?(username: auth.username)
+      erb(:errors)
+    elsif Authentication.exists?(Email: auth.Email)
+      erb(:errors)
+    else
+      auth.save()
+      redirect("/current_users")
+    end
+  end
 
   post("/events") do
     name = params.fetch("name")
@@ -142,26 +147,26 @@ require("bundler/setup")
     redirect  "https://chart.googleapis.com/chart?chs=150x150&cht=qr&chl=" + (name + " - " + " Telephone "+ Telephone + " - " + " Tickets " +ticket)
   end
 
-  # post("/users") do
-  #   name = params.fetch(:name)
-  #   Telephone = params.fetch(:Telephone)
-  #   Email = params.fetch(:Email)
-  #   user = User.new({:name => name, :Telephone => Telephone, :Email => Email, :id => nil})
-  #   if user.save()
-  #     redirect("/users")
-  #   else
-  #     erb(:errors)
-  #   end
-  # end
+  post("/users") do
+    name = params.fetch(:name)
+    Telephone = params.fetch(:Telephone)
+    Email = params.fetch(:Email)
+    user = User.new({:name => name, :Telephone => Telephone, :Email => Email, :id => nil})
+    if user.save()
+      redirect("/users")
+    else
+      erb(:errors)
+    end
+  end
 
-  # patch("/users/:id") do
-  #   user_id = params.fetch("id").to_i()
-  #   @user = User.find(user_id)
-  #   event_ids = params.fetch("event_ids")
-  #   @user.update({:event_ids => event_ids})
-  #   @events = Event.all()
-  #   redirect("/users")
-  # end
+  patch("/users/:id") do
+    user_id = params.fetch("id").to_i()
+    @user = User.find(user_id)
+    event_ids = params.fetch("event_ids")
+    @user.update({:event_ids => event_ids})
+    @events = Event.all()
+    redirect("/users")
+  end
 
   delete("/events/:id") do
     @event = Event.find(params.fetch("id").to_i())
@@ -176,4 +181,3 @@ require("bundler/setup")
     @event = Event.find(params.fetch("id").to_i())
     erb(:delete_event)
   end
-# update

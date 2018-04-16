@@ -10,12 +10,7 @@ require("bundler/setup")
   post "/current_users" do
     @name = params["name"]
     @email = params["email"]
-    if Authentication.exists?(authentications: {username: @name, Email: @email})
-      session[:message] = "Welcome #{@name}"
-      redirect "/index?name=#{@name}"
-    else
-      erb(:no_user)
-    end
+   
   end
 
   #loads first web page 'index'

@@ -1,0 +1,7 @@
+<h2><%=@event.name() %> </h2>
+
+  <form action="/events/<%= @event.id() %>" method="post">
+    <input name="_method" type="hidden" value="delete">
+
+    <button type="submit">Delete Event</button>
+  </form>

@@ -7,15 +7,15 @@ require("bundler/setup")
   enable :sessions
 
   #sessions
-  post "/current_users" do
-    @name = params["name"]
-    @email = params["email"]
+  # post "/current_users" do
+  #   @name = params["name"]
+  #   @email = params["email"]
    
   end
 
   #loads first web page 'index'
   get("/") do
-    erb(:start)
+    erb(:index)
   end
 
   get("/index") do

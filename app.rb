@@ -176,3 +176,4 @@ require("bundler/setup")
     @event = Event.find(params.fetch("id").to_i())
     erb(:delete_event)
   end
+# update
